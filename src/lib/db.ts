@@ -7,9 +7,8 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  const url = process.env.DATABASE_URL
+  const url = process.env.DATABASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL
 
-  // If using Turso (libsql://), use the LibSQL adapter
   if (url && url.startsWith('libsql://')) {
     const authToken = process.env.DATABASE_AUTH_TOKEN
     const libsql = createClient({ url, authToken })
@@ -17,14 +16,8 @@ function createPrismaClient() {
     return new PrismaClient({ adapter } as never)
   }
 
-  // Fallback to local SQLite (for development)
-  return new PrismaClient({
-    log: ['error', 'warn'],
-  })
+  return new PrismaClient({ log: ['error', 'warn'] })
 }
 
-export const db =
-  globalForPrisma.prisma ??
-  createPrismaClient()
-
+export const db = globalForPrisma.prisma ?? createPrismaClient()
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
