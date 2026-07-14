@@ -2,12 +2,13 @@
 // Plataforma de administración de sitio web con panel admin e Instagram
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./prisma/dummy.db"
+  url      = env("DATABASE_URL")
 }
 
 // Configuración global del sitio (logo, colores, contacto, redes)
