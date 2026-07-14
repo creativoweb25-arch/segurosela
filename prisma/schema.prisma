@@ -2,8 +2,7 @@
 // Plataforma de administración de sitio web con panel admin e Instagram
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
