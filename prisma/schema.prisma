@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "sqlite"
+  url       = "libsql://segurosela-creativoweb25-arch.aws-us-east-2.turso.io"
+  directUrl = "libsql://segurosela-creativoweb25-arch.aws-us-east-2.turso.io"
 }
 
 // Configuración global del sitio (logo, colores, contacto, redes)
