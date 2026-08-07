@@ -13,8 +13,9 @@ export async function GET() {
     })
     return NextResponse.json({ success: true, data: slides })
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Unknown error'
-    return NextResponse.json({ success: false, error: msg }, { status: 500 })
+    const err = e as Error
+    const msg = err.message || 'Unknown error'
+    return NextResponse.json({ success: false, error: msg, stack: err.stack }, { status: 500 })
   }
 }
 
