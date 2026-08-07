@@ -22,7 +22,7 @@ function createPrismaClient() {
   if (url && url.startsWith('libsql://')) {
     const libsql = createClient({ url, authToken })
     const adapter = new PrismaLibSql(libsql)
-    return new PrismaClient({ adapter } as never)
+    return new PrismaClient({ adapter, datasourceUrl: url } as never)
   }
 
   // Fallback to local SQLite (for development)
