@@ -1,0 +1,191 @@
+// Prisma schema - Seguros y Fianzas ELA
+// Plataforma de administración de sitio web con panel admin e Instagram
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Configuración global del sitio (logo, colores, contacto, redes)
+model SiteSettings {
+  id              String   @id @default("singleton")
+  brandName       String   @default("Seguros y Fianzas ELA")
+  tagline         String   @default("Brindamos Servicios de Seguros y Fianzas")
+  logoUrl         String?
+  logoText        String   @default("ELA")
+  primaryColor    String   @default("#00455e")
+  secondaryColor  String   @default("#23a1ea")
+  accentColor     String   @default("#faae0b")
+  darkColor       String   @default("#212121")
+  phone           String   @default("66-3206-4190")
+  whatsapp        String?
+  email           String   @default("contacto@segurosela.com")
+  address         String   @default("Calle Buenaventura #374, Fracc. Chapultepec, Tijuana, B.C., CP 22020")
+  schedule        String   @default("Lun - Vier: 09:00 - 18:00")
+  instagramUser   String?
+  instagramUrl    String?
+  facebookUrl     String?
+  linkedinUrl     String?
+  yearsExperience Int      @default(10)
+  aboutText       String   @default("Constituida como una empresa 100% Mexicana, contamos con mas de 10 años de trayectoria.")
+  aboutImageUrl   String?
+  updatedAt       DateTime @updatedAt
+}
+
+// Administrador del sitio
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+// Servicios (Personal, Empresarial, Fianzas, ...)
+model Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  shortDesc   String
+  description String
+  features    String?  // JSON string: array of { name, detail }
+  icon        String   @default("shield")
+  imageUrl    String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Miembros del equipo
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String?
+  imageUrl  String?
+  email     String?
+  phone     String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Compañías aseguradoras aliadas
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// Aliados comerciales (con enlace a su sitio web)
+model CommercialAlly {
+  id          String   @id @default(cuid())
+  name        String
+  logoUrl     String?  // null = mostrar nombre estilizado
+  websiteUrl  String   // enlace al sitio del aliado
+  description String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+// Ferias de salud (eventos con fecha, lugar y estado)
+model HealthFair {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  endDate     DateTime?
+  location    String
+  state       String   // "Baja California" o "Estado de México"
+  address     String?
+  time        String?  // horario, ej "09:00 - 14:00"
+  imageUrl    String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+// Slides del hero / carrusel
+model Slide {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String
+  description String?
+  buttonText  String   @default("Saber Más")
+  buttonLink  String   @default("#cotizacion")
+  imageUrl    String
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+// Publicaciones del blog
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  imageUrl    String?
+  category    String   @default("Nuestras Publicaciones")
+  author      String   @default("Seguros ELA")
+  views       Int      @default(0)
+  published   Boolean  @default(true)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Publicaciones de Instagram (estilo plugin Balloon)
+// Se pueden agregar manualmente o sincronizar desde el handle configurado
+model InstagramPost {
+  id           String   @id @default(cuid())
+  instagramId  String?  // ID real de Instagram si se sincroniza
+  permalink    String   // URL al post en Instagram
+  imageUrl     String?  // URL de la imagen/thumbnail (null = modo embed en vivo)
+  caption      String?
+  likes        Int      @default(0)
+  comments     Int      @default(0)
+  postedAt     DateTime?
+  order        Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+// Solicitudes de cotización
+model QuoteRequest {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  phone        String
+  insuranceType String
+  protectionLevel String?
+  message      String?
+  consent      Boolean  @default(true)
+  status       String   @default("nuevo") // nuevo, contactado, cerrado
+  createdAt    DateTime @default(now())
+}
+
+// Mensajes de contacto
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  consent   Boolean  @default(true)
+  status    String   @default("nuevo")
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Seguros y Fianzas ELA",
+  "short_name": "Seguros ELA",
+  "description": "Seguros personales, empresariales y fianzas en Tijuana, B.C.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#00455e",
+  "lang": "es-MX",
+  "icons": [
+    {
+      "src": "/images/logo/ela-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/logo/ela-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
