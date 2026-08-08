@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { promises as fs } from 'fs'
 import path from 'path'
 import { requireAdmin } from '@/lib/auth'
 
@@ -81,17 +80,15 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    await fs.mkdir(UPLOAD_DIR, { recursive: true })
-
+    // Convert file to Base64 to bypass Vercel read-only filesystem restrictions
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const base64String = buffer.toString('base64')
+    const url = `data:${contentType};base64,${base64String}`
+    
+    // Fallback for file name if needed
     const timestamp = Date.now()
     const safeName = sanitizeFilename(file.name) || `upload-${timestamp}`
     const filename = `${timestamp}-${safeName}`
-    const filepath = path.join(UPLOAD_DIR, filename)
-
-    const buffer = Buffer.from(await file.arrayBuffer())
-    await fs.writeFile(filepath, buffer)
-
-    const url = `/uploads/${filename}`
 
     return NextResponse.json({
       success: true,
